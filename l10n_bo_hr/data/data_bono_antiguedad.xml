@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="bono1" model="hr.bono.antiguedad">
+            <field name="name">2-4</field>
+            <field name="anio_min">2.00</field>
+            <field name="anio_max">4.99</field>
+            <field name="porcentaje">5.00</field>
+        </record>
+        <record id="bono2" model="hr.bono.antiguedad">
+            <field name="name">5-7</field>
+            <field name="anio_min">5.00</field>
+            <field name="anio_max">7.99</field>
+            <field name="porcentaje">11.00</field>
+        </record>
+        <record id="bono3" model="hr.bono.antiguedad">
+            <field name="name">8-10</field>
+            <field name="anio_min">8.00</field>
+            <field name="anio_max">10.99</field>
+            <field name="porcentaje">18.00</field>
+        </record>
+        <record id="bono4" model="hr.bono.antiguedad">
+            <field name="name">11-14</field>
+            <field name="anio_min">11.00</field>
+            <field name="anio_max">14.99</field>
+            <field name="porcentaje">26.00</field>
+        </record>
+        <record id="bono5" model="hr.bono.antiguedad">
+            <field name="name">15-19</field>
+            <field name="anio_min">15.00</field>
+            <field name="anio_max">19.99</field>
+            <field name="porcentaje">34.00</field>
+        </record>
+        <record id="bono6" model="hr.bono.antiguedad">
+            <field name="name">20-24</field>
+            <field name="anio_min">20.00</field>
+            <field name="anio_max">24.99</field>
+            <field name="porcentaje">42.00</field>
+        </record>
+        <record id="bono7" model="hr.bono.antiguedad">
+            <field name="name">25-100</field>
+            <field name="anio_min">25.00</field>
+            <field name="anio_max">100.00</field>
+            <field name="porcentaje">50.00</field>
+        </record>
+    </data>
+</odoo>

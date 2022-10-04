@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_l10n_bo_hr_xlsx" model="ir.actions.report">
+            <field name="name">LCV XLSX</field>
+            <field name="model">payroll.afp</field>
+            <field name="type">ir.actions.report</field>
+            <field name="report_name">l10n_bo_hr.payroll_afp_xlsx.xlsx</field>
+            <field name="report_type">xlsx</field>
+            <field name="report_file">afp_xls</field>
+        </record>
+
+        <record id="action_l10n_bo_hr_xlsx2" model="ir.actions.report">
+            <field name="name">LCV XLSX2</field>
+            <field name="model">payroll.ministry</field>
+            <field name="type">ir.actions.report</field>
+            <field name="report_name">l10n_bo_hr.payroll_a_xlsx.xlsx</field>
+            <field name="report_type">xlsx</field>
+            <field name="report_file">ministry_xls</field>
+        </record>
+
+        <record id="action_l10n_bo_hr_xlsx3" model="ir.actions.report">
+            <field name="name">LCV XLSX3</field>
+            <field name="model">payroll.rciva</field>
+            <field name="type">ir.actions.report</field>
+            <field name="report_name">l10n_bo_hr.payroll_b_xlsx.xlsx</field>
+            <field name="report_type">xlsx</field>
+            <field name="report_file">rciva_xls</field>
+        </record>
+    </data>
+</odoo>

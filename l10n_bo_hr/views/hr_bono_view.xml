@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_hr_bono_antiguedad_tree" model="ir.ui.view">
+        <field name="name">hr.bono.antiguedad.tree</field>
+        <field name="model">hr.bono.antiguedad</field>
+        <field name="arch" type="xml">
+            <tree string="Parametros Bono Antiguedad" editable="bottom" create="false" delete="false">
+                <field name="name"/>
+                <field name="anio_min"/>
+                <field name="anio_max"/>
+                <field name="porcentaje"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="act_hr_bono_antiguedad">
+        <field name="name">Porcentajes Bono Antiguedad</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hr.bono.antiguedad</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+    <menuitem
+        id="menu_hr_bono_antiguedad"
+        action="act_hr_bono_antiguedad"
+        parent="hr_payroll.menu_hr_salary_configuration"
+        sequence="50"/>
+    
+    <record id="view_hr_bono_plantilla_tree" model="ir.ui.view">
+        <field name="name">hr.bono.plantilla.tree</field>
+        <field name="model">hr.bono.plantilla</field>
+        <field name="arch" type="xml">
+            <tree string="Parametros Plantilla" editable="bottom">
+                <field name="name"/>
+                <field name="amount"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="act_hr_bono_plantilla">
+        <field name="name">Configuración Bonos</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hr.bono.plantilla</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+    <menuitem
+        id="menu_hr_bono_plantilla"
+        action="act_hr_bono_plantilla"
+        parent="hr_payroll.menu_hr_salary_configuration"
+        sequence="50"/>
+</odoo>

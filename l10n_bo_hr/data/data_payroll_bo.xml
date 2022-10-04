@@ -1,0 +1,630 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- UFV -->
+        <record id="res_currency_ufv" model="res.currency">
+			<field name="name">UFV</field>
+			<field eval="0.01" name="rounding"/>
+			<field name="symbol">UFV</field>
+			<field eval="1" name="active"/>
+			<field name="position">after</field>
+			<field eval="2" name="decimal_places"/>
+		</record>
+        <record id="rate_ufv" model="res.currency.rate">
+			<field name="rate">0.4470072862187654</field>
+			<field name="currency_id" ref="res_currency_ufv"/>
+      		<field eval="time.strftime('2018-01-01')" name="name"/>
+		</record>
+
+        <!-- Categorias -->
+        <record id="hr_tot" model="hr.salary.rule.category">
+            <field name="name">TOTALES</field>
+            <field name="code">TOT</field>
+        </record>
+        <record id="hr_bono" model="hr.salary.rule.category">
+            <field name="name">BONOS</field>
+            <field name="code">BONO</field>
+        </record>
+        <record id="hr_const" model="hr.salary.rule.category">
+            <field name="name">CONSTANTES</field>
+            <field name="code">CONST</field>
+        </record>
+        <record id="hr_ded_rc" model="hr.salary.rule.category">
+            <field name="name">RCIVA</field>
+            <field name="code">CRCIVA</field>
+        </record>
+
+        <record id="hr_rciva_inf" model="hr.salary.rule.category">
+            <field name="name">RCIVA INFORME</field>
+            <field name="code">RCIVA_INF</field>
+        </record>
+
+        <record id="hr_afp_inf" model="hr.salary.rule.category">
+            <field name="name">AFP INFORME</field>
+            <field name="code">AFP_INF</field>
+        </record>
+
+        <record id="BASICBO" model="hr.salary.rule.category">
+            <field name="name">BASICO</field>
+            <field name="code">BASICBO</field>
+        </record>
+
+        <record id="ALWBO" model="hr.salary.rule.category">
+            <field name="name">TOLERANCIA</field>
+            <field name="code">ALWBO</field>
+        </record>
+
+        <record id="GROSSBO" model="hr.salary.rule.category">
+            <field name="name">BRUTO</field>
+            <field name="code">GROSSBO</field>
+        </record>
+
+        <record id="DEDBO" model="hr.salary.rule.category">
+            <field name="name">DEDUCCIONES</field>
+            <field name="code">DEDBO</field>
+        </record>
+
+        <record id="NETBO" model="hr.salary.rule.category">
+            <field name="name">NETO</field>
+            <field name="code">NETBO</field>
+        </record>
+
+        <!-- Tipo Estructura -->
+        <record id="hr_payroll_salary_structure_type_bo" model="hr.payroll.structure.type">
+            <field name="name">Sueldos y Salarios Bolivia</field>
+            <field name="country_id" ref="base.bo"/>
+        </record>
+        <!-- Estructuras Salariales -->
+        <record id="base_sueldos_salarios" model="hr.payroll.structure">
+            <field name="code">BASE-BOL</field>
+            <field name="name">BASE PLANILLA SUELDOS Y SALARIOS</field>
+            <field name="type_id" ref="hr_payroll_salary_structure_type_bo"/>
+            <field name="country_id" ref="base.bo"/>
+        </record>
+
+        <!-- Otros tipos de entrada -->
+        <record id="input_bo_adelanto" model="hr.payslip.input.type">
+            <field name="name">ADELANTO DE SUELDO</field>
+            <field name="code">ADE</field>
+            <field name="struct_ids" eval="[(6, 0, [ref('base_sueldos_salarios')])]"/>
+            <field name="country_id" ref="base.bo"/>
+        </record>
+
+        <record id="input_bo_prestamo" model="hr.payslip.input.type">
+            <field name="name">PRESTAMOS</field>
+            <field name="code">PRE</field>
+            <field name="struct_ids" eval="[(6, 0, [ref('base_sueldos_salarios')])]"/>
+            <field name="country_id" ref="base.bo"/>
+        </record>
+
+        <record id="hr_rule_min_wage" model="hr.salary.rule">
+            <field name="name">Sueldo Minimo</field>
+            <field name="sequence">0</field>
+            <field name="code">min_wage</field>
+            <field name="appears_on_payslip" eval="False"></field>
+            <field name="category_id" ref="hr_const"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">fix</field>
+            <field name="amount_fix">2250.00</field>
+            <field name="struct_id" ref="base_sueldos_salarios"/>
+        </record>
+
+        <record id="hr_rule_basic" model="hr.salary.rule">
+            <field name="name">Salario Básico</field>
+            <field name="sequence" eval="1"/>
+            <field name="code">BASICBO</field>
+            <field name="category_id" ref="BASICBO"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.wage</field>
+            <field name="struct_id" ref="base_sueldos_salarios"/>
+        </record>
+
+        <record id="hr_rule_bono_a" model="hr.salary.rule">
+            <field name="name">Bono Antiguedad</field>
+            <field name="sequence">6</field>
+            <field name="code">BONO_A</field>
+            <field name="appears_on_payslip" eval="True"></field>
+            <field name="category_id" ref="hr_bono"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = calculo_bono_antiguedad(payslip)
+            </field>
+            <field name="struct_id" ref="base_sueldos_salarios"/>
+        </record>
+
+        <record id="hr_rule_bono_f" model="hr.salary.rule">
+            <field name="name">Bono Frontera</field>
+            <field name="sequence">7</field>
+            <field name="code">BONO_F</field>
+            <field name="appears_on_payslip" eval="True"></field>
+            <field name="category_id" ref="hr_bono"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+if contract.bono_front:
+    result = contract.wage * 0.2
+else:
+    result = 0
+            </field>
+            <field name="struct_id" ref="base_sueldos_salarios"/>
+        </record>
+
+        <record id="hr_rule_bono_hex" model="hr.salary.rule">
+            <field name="name">Bono Horas Extras</field>
+            <field name="sequence">8</field>
+            <field name="code">BONO_HEX</field>
+            <field name="appears_on_payslip" eval="True"></field>
+            <field name="category_id" ref="hr_bono"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = calculo_horas_extra(payslip)
+            </field>
+            <field name="struct_id" ref="base_sueldos_salarios"/>
+        </record>
+
+        <record id="hr_rule_bono_hex_noct" model="hr.salary.rule">
+            <field name="name">Bono Horas Extras Nocturno</field>
+            <field name="sequence">9</field>
+            <field name="code">BONO_HEX_NOCT</field>
+            <field name="appears_on_payslip" eval="True"></field>
+            <field name="category_id" ref="hr_bono"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = calculo_horas_recargo_nocturno(payslip)
+            </field>
+            <field name="struct_id" ref="base_sueldos_salarios"/>
+        </record>
+
+        <record id="hr_rule_bono_hex_dom" model="hr.salary.rule">
+            <field name="name">Bono Horas Extras Domingo</field>
+            <field name="sequence">10</field>
+            <field name="code">BONO_HEX_DOM</field>
+            <field name="appears_on_payslip" eval="True"></field>
+            <field name="category_id" ref="hr_bono"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = calculo_horas_extra_domingo(payslip)
+            </field>
+            <field name="struct_id" ref="base_sueldos_salarios"/>
+        </record>
+
+        <record id="hr_rule_other_o" model="hr.salary.rule">
+            <field name="name">Otros Bonos</field>
+            <field name="sequence">11</field>
+            <field name="code">BONO_O</field>
+            <field name="category_id" ref="hr_bono"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = calculo_otros_bonos(payslip)
+            </field>
+            <field name="struct_id" ref="base_sueldos_salarios"/>
+        </record>
+
+        <record id="hr_rule_taxable"  model="hr.salary.rule">
+            <field name="name">Total Ganado</field>
+            <field name="sequence" eval="100"/>
+            <field name="code">GROSSBO</field>
+            <field name="category_id" ref="GROSSBO"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = categories.BASICBO + categories.BONO</field>
+            <field name="struct_id" ref="base_sueldos_salarios"/>
+        </record>
+
+        <record id="hr_rule_afp" model="hr.salary.rule">
+            <field name="name">AFP</field>
+            <field name="sequence">102</field>
+            <field name="code">AFP</field>
+            <field name="appears_on_payslip" eval="True"></field>
+            <field name="category_id" ref="ALWBO"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">percentage</field>
+            <field name="amount_percentage_base">categories.GROSSBO</field>
+            <field name="quantity">1</field>
+            <field name="amount_percentage">12.71</field>
+            <field name="struct_id" ref="base_sueldos_salarios"/>
+        </record>
+
+        <record id="hr_rule_sol" model="hr.salary.rule">
+            <field name="name">Aporte Nacional Solidario</field>
+            <field name="sequence">103</field>
+            <field name="code">SOL</field>
+            <field name="appears_on_payslip" eval="True"></field>
+            <field name="category_id" ref="ALWBO"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+if ((categories.GROSSBO) - 13000) > 0:
+    result1 = (categories.GROSSBO - 13000) * 0.01
+else:
+    result1 = 0
+if ((categories.GROSSBO) - 25000) > 0:
+    result2= (categories.GROSSBO - 25000) * 0.5
+else:
+    result2 = 0
+if ((categories.GROSSBO) - 35000) > 0:
+    result3 = (categories.GROSSBO - 35000) * 0.1
+else:
+    result3 = 0
+result = result1 + result2 + result3
+            </field>
+            <field name="struct_id" ref="base_sueldos_salarios"/>
+        </record>
+        <record id="hr_rule_total1" model="hr.salary.rule">
+            <field name="name">DIF. SUJETA IMPUESTO</field>
+            <field name="sequence">140</field>
+            <field name="code">TOT_NETO</field>
+            <field name="appears_on_payslip" eval="True"></field>
+            <field name="category_id" ref="hr_tot"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = categories.GROSSBO - categories.ALWBO
+            </field>
+            <field name="struct_id" ref="base_sueldos_salarios"/>
+        </record>
+
+         <record id="hr_rule_rciva_t" model="hr.salary.rule">
+            <field name="name">RC-IVA FISCO</field>
+            <field name="sequence">150</field>
+            <field name="code">RCIVA_TOTAL</field>
+            <field name="appears_on_payslip" eval="False"></field>
+            <field name="category_id" ref="hr_ded_rc"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+if TOT_NETO > (rules.min_wage.amount_fix * 4):
+    total_rciva = (((TOT_NETO - rules.min_wage.amount_fix*2) * 0.13) - ((rules.min_wage.amount_fix *2) * 0.13))
+    tot_rc, saldo_favor, s2 = calculo_rciva(payslip, total_rciva)
+    result = total_rciva - tot_rc
+else:
+    result = 0
+            </field>
+             <field name="struct_id" ref="base_sueldos_salarios"/>
+        </record>
+
+        <record id="hr_rule_ade" model="hr.salary.rule">
+            <field name="name">Descuento por Adelanto</field>
+            <field name="sequence">152</field>
+            <field name="code">ADE</field>
+            <field name="appears_on_payslip" eval="True"></field>
+            <field name="category_id" ref="DEDBO"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+if inputs.ADE:
+    result = inputs.ADE['amount']
+else:
+    result = 0
+            </field>
+            <field name="struct_id" ref="base_sueldos_salarios"/>
+        </record>
+
+        <record id="hr_rule_pre" model="hr.salary.rule">
+            <field name="name">Descuento por Prestamo</field>
+            <field name="sequence">153</field>
+            <field name="code">PRE</field>
+            <field name="appears_on_payslip" eval="True"></field>
+            <field name="category_id" ref="DEDBO"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+if inputs.PRE:
+    result = inputs.PRE['amount']
+else:
+    result = 0
+            </field>
+            <field name="struct_id" ref="base_sueldos_salarios"/>
+        </record>
+
+        <record id="hr_rule_totald" model="hr.salary.rule">
+            <field name="name">Total Descuentos</field>
+            <field name="sequence">191</field>
+            <field name="code">TOTAL_D</field>
+            <field name="appears_on_payslip" eval="True"></field>
+            <field name="category_id" ref="hr_tot"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = categories.ALWBO + categories.DEDBO
+            </field>
+            <field name="struct_id" ref="base_sueldos_salarios"/>
+        </record>
+
+        <record id="hr_rule_net" model="hr.salary.rule">
+            <field name="name">Liquido Pagable</field>
+            <field name="sequence" eval="200"/>
+            <field name="code">NETBO</field>
+            <field name="category_id" ref="NETBO"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = categories.GROSSBO - (categories.ALWBO + categories.DEDBO)
+            </field>
+            <field name="struct_id" ref="base_sueldos_salarios"/>
+        </record>
+
+        <!-- REGLAS DEL INFORME RC-IVA -->
+        <record id="hr_rule_rciva_inf0" model="hr.salary.rule">
+            <field name="name">2 Salarios Mínimo no Imponibles</field>
+            <field name="sequence">500</field>
+            <field name="code">rciva_inf1</field>
+            <field name="appears_on_payslip" eval="False"></field>
+            <field name="category_id" ref="hr_rciva_inf"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = rules.min_wage.amount_fix * 2
+            </field>
+            <field name="struct_id" ref="base_sueldos_salarios"/>
+        </record>
+        <record id="hr_rule_rciva_inf1" model="hr.salary.rule">
+            <field name="name">IMPTO. 13%</field>
+            <field name="sequence">501</field>
+            <field name="code">rciva_inf2</field>
+            <field name="appears_on_payslip" eval="False"></field>
+            <field name="category_id" ref="hr_rciva_inf"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = (TOT_NETO - rciva_inf1) * 0.13
+            </field>
+            <field name="struct_id" ref="base_sueldos_salarios"/>
+        </record>
+        <record id="hr_rule_rciva_inf2" model="hr.salary.rule">
+            <field name="name">13%/S/2 SMN.</field>
+            <field name="sequence">502</field>
+            <field name="code">rciva_inf3</field>
+            <field name="appears_on_payslip" eval="False"></field>
+            <field name="category_id" ref="hr_rciva_inf"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = (rules.min_wage.amount_fix * 2) * 0.13
+            </field>
+            <field name="struct_id" ref="base_sueldos_salarios"/>
+        </record>
+        <record id="hr_rule_rciva_inf3" model="hr.salary.rule">
+            <field name="name">IVA Segun (F-110)</field>
+            <field name="sequence">503</field>
+            <field name="code">rciva_inf4</field>
+            <field name="appears_on_payslip" eval="False"></field>
+            <field name="category_id" ref="hr_rciva_inf"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = importe_rciva(payslip)
+            </field>
+            <field name="struct_id" ref="base_sueldos_salarios"/>
+        </record>
+        <record id="hr_rule_rciva_inf4" model="hr.salary.rule">
+            <field name="name">Saldo mes anterior</field>
+            <field name="sequence">504</field>
+            <field name="code">rciva_inf5</field>
+            <field name="appears_on_payslip" eval="False"></field>
+            <field name="category_id" ref="hr_rciva_inf"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+total_rciva = (((TOT_NETO - rules.min_wage.amount_fix*2) * 0.13) - ((rules.min_wage.amount_fix *2) * 0.13))
+tot_rc, saldo_favor, s2 = calculo_rciva(payslip, total_rciva)
+result = saldo_favor
+            </field>
+            <field name="struct_id" ref="base_sueldos_salarios"/>
+        </record>
+        <record id="hr_rule_rciva_inf5" model="hr.salary.rule">
+            <field name="name">Saldo Actual</field>
+            <field name="sequence">505</field>
+            <field name="code">rciva_inf6</field>
+            <field name="appears_on_payslip" eval="False"></field>
+            <field name="category_id" ref="hr_rciva_inf"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = payslip.current_saldo
+            </field>
+            <field name="struct_id" ref="base_sueldos_salarios"/>
+        </record>
+        <record id="hr_rule_rciva_inf6" model="hr.salary.rule">
+            <field name="name">Saldo Actual Total</field>
+            <field name="sequence">506</field>
+            <field name="code">rciva_inf7</field>
+            <field name="appears_on_payslip" eval="False"></field>
+            <field name="category_id" ref="hr_rciva_inf"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = payslip.current_saldo
+            </field>
+            <field name="struct_id" ref="base_sueldos_salarios"/>
+        </record>
+        <record id="hr_rule_rciva_inf7" model="hr.salary.rule">
+            <field name="name">Saldo a favor</field>
+            <field name="sequence">507</field>
+            <field name="code">rciva_inf8</field>
+            <field name="appears_on_payslip" eval="False"></field>
+            <field name="category_id" ref="hr_rciva_inf"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = payslip.saldo_next_month
+            </field>
+            <field name="struct_id" ref="base_sueldos_salarios"/>
+        </record>
+        <record id="hr_rule_rciva_inf8" model="hr.salary.rule">
+            <field name="name">Saldo Utilizado</field>
+            <field name="sequence">508</field>
+            <field name="code">rciva_inf9</field>
+            <field name="appears_on_payslip" eval="False"></field>
+            <field name="category_id" ref="hr_rciva_inf"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = payslip.spent_credit
+            </field>
+            <field name="struct_id" ref="base_sueldos_salarios"/>
+        </record>
+        <record id="hr_rule_rciva_inf9" model="hr.salary.rule">
+            <field name="name">Impuesto Retenido a pagar</field>
+            <field name="sequence">509</field>
+            <field name="code">rciva_inf10</field>
+            <field name="appears_on_payslip" eval="False"></field>
+            <field name="category_id" ref="hr_rciva_inf"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = payslip.rciva_current
+            </field>
+            <field name="struct_id" ref="base_sueldos_salarios"/>
+        </record>
+        <record id="hr_rule_rciva_inf10" model="hr.salary.rule">
+            <field name="name">Saldo a Favor Sgte. Mes</field>
+            <field name="sequence">510</field>
+            <field name="code">rciva_inf11</field>
+            <field name="appears_on_payslip" eval="False"></field>
+            <field name="category_id" ref="hr_rciva_inf"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+total_rciva = (((TOT_NETO - rules.min_wage.amount_fix*2) * 0.13) - ((rules.min_wage.amount_fix *2) * 0.13))
+tot_rc, saldo_favor, s2 = calculo_rciva(payslip, total_rciva)
+result = s2
+            </field>
+            <field name="struct_id" ref="base_sueldos_salarios"/>
+        </record>
+
+        <!-- REGLAS REPORTE DE APORTES LABORALES Y PATRONALES -->
+        <record id="hr_rule_afp_inf_0" model="hr.salary.rule">
+            <field name="name">Afp Laboral 12.21%</field>
+            <field name="sequence">520</field>
+            <field name="code">afp_inf_0</field>
+            <field name="appears_on_payslip" eval="False"></field>
+            <field name="category_id" ref="hr_afp_inf"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = categories.GROSSBO * 0.1221
+            </field>
+            <field name="struct_id" ref="base_sueldos_salarios"/>
+        </record>
+        <record id="hr_rule_afp_inf_1" model="hr.salary.rule">
+            <field name="name">Aporte Solidario laboral 0.05%</field>
+            <field name="sequence">521</field>
+            <field name="code">afp_inf_1</field>
+            <field name="appears_on_payslip" eval="False"></field>
+            <field name="category_id" ref="hr_afp_inf"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = categories.GROSSBO * 0.0050
+            </field>
+            <field name="struct_id" ref="base_sueldos_salarios"/>
+        </record>
+        <record id="hr_rule_afp_inf_2" model="hr.salary.rule">
+            <field name="name">Aporte Solidario Laboral 1.71%</field>
+            <field name="sequence">522</field>
+            <field name="code">afp_inf_2</field>
+            <field name="appears_on_payslip" eval="False"></field>
+            <field name="category_id" ref="hr_afp_inf"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = categories.GROSSBO * 0.0171
+            </field>
+            <field name="struct_id" ref="base_sueldos_salarios"/>
+        </record>
+        <record id="hr_rule_afp_inf_3" model="hr.salary.rule">
+            <field name="name">Aporte Solidario Patronal 3%</field>
+            <field name="sequence">523</field>
+            <field name="code">afp_inf_3</field>
+            <field name="appears_on_payslip" eval="False"></field>
+            <field name="category_id" ref="hr_afp_inf"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = categories.GROSSBO * 0.03
+            </field>
+            <field name="struct_id" ref="base_sueldos_salarios"/>
+        </record>
+        <record id="hr_rule_afp_inf_4" model="hr.salary.rule">
+            <field name="name">Aporte Solidario Laboral 1%</field>
+            <field name="sequence">524</field>
+            <field name="code">afp_inf_4</field>
+            <field name="appears_on_payslip" eval="False"></field>
+            <field name="category_id" ref="hr_afp_inf"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+if ((categories.GROSSBO) - 13000) > 0:
+    result = (categories.GROSSBO  - 13000) * 0.01
+else:
+    result = 0
+            </field>
+            <field name="struct_id" ref="base_sueldos_salarios"/>
+        </record>
+        <record id="hr_rule_afp_inf_5" model="hr.salary.rule">
+            <field name="name">Aporte Solidario Laboral 5%</field>
+            <field name="sequence">525</field>
+            <field name="code">afp_inf_5</field>
+            <field name="appears_on_payslip" eval="False"></field>
+            <field name="category_id" ref="hr_afp_inf"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+if ((categories.GROSSBO) - 25000) > 0:
+    result = (categories.GROSSBO - 25000) * 0.05
+else:
+    result = 0
+            </field>
+            <field name="struct_id" ref="base_sueldos_salarios"/>
+        </record>
+        <record id="hr_rule_afp_inf_6" model="hr.salary.rule">
+            <field name="name">Aporte Solidario Laboral 10%</field>
+            <field name="sequence">526</field>
+            <field name="code">afp_inf_6</field>
+            <field name="appears_on_payslip" eval="False"></field>
+            <field name="category_id" ref="hr_afp_inf"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+if ((categories.GROSSBO) - 35000) > 0:
+    result = (categories.GROSSBO - 35000) * 0.1
+else:
+    result = 0
+            </field>
+            <field name="struct_id" ref="base_sueldos_salarios"/>
+        </record>
+        <record id="hr_rule_afp_inf_7" model="hr.salary.rule">
+            <field name="name">Pro-Vivienda Patronal 2%</field>
+            <field name="sequence">527</field>
+            <field name="code">afp_inf_7</field>
+            <field name="appears_on_payslip" eval="False"></field>
+            <field name="category_id" ref="hr_afp_inf"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = categories.GROSSBO * 0.02
+            </field>
+            <field name="struct_id" ref="base_sueldos_salarios"/>
+        </record>
+        <record id="hr_rule_afp_inf_8" model="hr.salary.rule">
+            <field name="name">Aporte Patronal 10%</field>
+            <field name="sequence">528</field>
+            <field name="code">afp_inf_8</field>
+            <field name="appears_on_payslip" eval="False"></field>
+            <field name="category_id" ref="hr_afp_inf"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = categories.GROSSBO * 0.10
+            </field>
+            <field name="struct_id" ref="base_sueldos_salarios"/>
+        </record>
+    </data>
+</odoo>
