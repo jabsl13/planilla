@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!--PapeletaPAgo Form -->
+        <record model="ir.ui.view" id="contract_view_form_inherit_l10n_b0_hr">
+            <field name="name">contract.view.form.inherit.l10n_b0_hr</field>
+            <field name="model">hr.contract</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form[1]/sheet[1]/notebook[1]/page[@name='information']/group[@name='salary_info']/group[@name='salary']/label[1]"
+                       position="before">
+                    <field name="salary_advance"/>
+                    <field name="bonus"/>
+                </xpath>
+                <xpath expr="//group[@name='yearly_advantages']" position="inside">
+                    <field name="recar_nocturno"/>
+                </xpath>
+                <xpath expr="//form[1]/sheet[1]/notebook[1]" position="inside">
+                    <page string="Salud">
+                        <group name="studio_group_oR6GJ">
+                            <group string="Institución de salud">
+                                <field name="health_manager_id"/>
+                                <field name="avc_number"/>
+                            </group>
+                        </group>
+                    </page>
+                    <page string="Bonos">
+                        <group>
+                            <group string="Bonos">
+                                <field name="bono_front"/>
+                                <field name="dominical"/>
+                            </group>
+                        </group>
+                        <field name="bono_ids" colspan="4" nolabel="1">
+                            <tree string="Bonos" editable="bottom">
+                                <field name="bono_id"/>
+                                <field name="amount"/>
+                            </tree>
+                        </field>
+                    </page>
+                    <page string="Detalle de Pagos">
+                        <group>
+                            <group>
+                                <field name="bank_company"/>
+                                <field name="cta_bank"/>
+                                <field name="divisa_id"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+                <xpath expr="//form[1]/sheet[1]/notebook[1]" position="inside">
+                    <page string="Fondos de Pensión">
+                        <group>
+                            <group string="AFP">
+                                <field name="retiree"/>
+                                <field name="contributes_afp"/>
+                                <field name="afp_manager_id"/>
+                                <field name="nua_cua"/>
+                                <field name="disabled_person"/>
+                                <field name="disabled_person_tutor"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

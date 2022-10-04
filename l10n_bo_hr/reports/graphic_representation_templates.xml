@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="graphic_representation_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-set="self_company" t-value="doc.env.company"/>
+                <t t-call="web.internal_layout">
+                    <style>
+                        table, th, td {
+                        border: 1px solid black;
+                        border-collapse: collapse;
+                        }
+                    </style>
+                    <div class="page" style="font-size:10px;">
+                        <div align="center">
+                            <div class="col-4">
+                                <h5 align="center">BOLETA DE PAGO</h5>
+                                <h6 t-field="doc.name" class="mt16"/>
+                            </div>
+                        </div>
+                        <div class="row justify-content-start">
+                            <div class="col-3">
+                                <p align="left">Nit de la Empresa:</p>
+                            </div>
+                            <div class="col-3">
+                                <p t-field="self_company.vat" class="mt16"/>
+                                <p align="left">1020469023</p>
+                            </div>
+                        </div>
+                        <div class="row justify-content-start">
+                            <div class="col-3">
+                                <p align="left">Número del Empleado:</p>
+                            </div>
+                            <div class="col-3">
+                                <p t-field="doc.employee_id.registration_number" class="mt16"/>
+                            </div>
+                            <div class="col-3">
+                                <p align="left">Tipo de Empleado:</p>
+                            </div>
+                            <div class="col-3">
+                                <p t-field="doc.employee_id.category_ids" class="mt16"/>
+                            </div>
+                        </div>
+                        <div class="row justify-content-start">
+                            <div class="col-3">
+                                <p align="left">Nombres y apellidos:</p>
+                            </div>
+                            <div class="col-3">
+                                <p t-field="doc.employee_id" class="mt16"/>
+                            </div>
+                            <div class="col-3">
+                                <p align="left">Oficina:</p>
+                            </div>
+                            <div class="col-3">
+                                <p t-field="doc.employee_id.work_location_id" class="mt16"/>
+                            </div>
+                        </div>
+
+                        <div class="row justify-content-start">
+                            <div class="col-3">
+                                <p align="left">Cargo:</p>
+                            </div>
+                            <div class="col-3">
+                                <p t-field="doc.employee_id.job_title" class="mt16"/>
+                            </div>
+                            <div class="col-3">
+                                <p align="left">Cod. Laboral:</p>
+                            </div>
+                            <div class="col-3">
+                                <p t-field="doc.employee_id.cod_laboral" class="mt16"/>
+                            </div>
+                        </div>
+                        <div class="row justify-content-start">
+                            <div class="col-3">
+                                <p align="left"></p>
+                            </div>
+                            <div class="col-3">
+                                <!--<p t-field="self_company.vat" class="mt16"/>-->
+                            </div>
+                            <div class="col-3">
+                                <p align="left">Cod. Patronal:</p>
+                            </div>
+                            <div class="col-3">
+                                <p align="left">01-927-0314</p>
+                            </div>
+                        </div>
+
+                        <table style="width:100%; border-collapse: collapse;">
+                            <thead>
+                                <tr>
+                                    <th align="right" colspan="3">INGRESOS</th>
+                                    <th align="right" colspan="3">DESCUENTOS</th>
+                                    <th align="right" colspan="3">APORTES EMPLEADOR</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="doc.line_ids.filtered(lambda line: line.appears_on_payslip)" t-as="det">
+                                    <t t-if="det.category_id.name in ('BASICO','BONOS')">
+                                        <td name="td_name">
+                                            <t t-esc="det.name"/>
+                                        </td>
+                                        <td>a</td>
+                                        <td>
+                                            <t t-esc="det.amount" digits="[42, 2]"
+                                               t-options='{"widget": "monetary", "display_currency": det.company_id.currency_id}'/>
+                                        </td>
+                                    </t>
+                                    <t t-else="">
+                                        <td colspan="3"></td>
+                                    </t>
+
+                                    <td name="td_name">
+                                        <t t-esc="det.name"/>
+                                    </td>
+                                    <td>b</td>
+                                    <td>
+                                        <t t-esc="det.amount" digits="[42, 2]"
+                                           t-options='{"widget": "monetary", "display_currency": det.company_id.currency_id}'/>
+                                    </td>
+
+                                    <td name="td_name">
+                                        <t t-esc="det.name"/>
+                                    </td>
+                                    <td>c</td>
+                                    <td>
+                                        <t t-esc="det.amount" digits="[42, 2]"
+                                           t-options='{"widget": "monetary", "display_currency": det.company_id.currency_id}'/>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td colspan="2">Total Ganado</td>
+                                    <td>0</td>
+                                    <td colspan="2">Total Descuentos</td>
+                                    <td>0</td>
+                                    <td colspan="2">Total Aportes Empleador</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2"></td>
+                                    <td></td>
+                                    <td colspan="2">Importe Neto a Pagar</td>
+                                    <td>0</td>
+                                    <td colspan="2"></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6">DOCIENTOS CUARENTA Y DOS</td>
+                                    <td colspan="2"></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="9"></td>
+                                </tr>
+                                <tr>
+                                    <td><br/> <br/></td>
+                                    <td></td>
+                                    <td colspan="2" align="center"></td>
+                                    <td></td>
+                                    <td colspan="2" align="center"></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td colspan="2" align="center">Nombre de Empresa</td>
+                                    <td></td>
+                                    <td colspan="2" align="center">ANGULO CORTEZ PEDRO MIGUEL
+                                        <br/>
+                                        134344345 LP
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

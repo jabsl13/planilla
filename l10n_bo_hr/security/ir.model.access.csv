@@ -1,0 +1,17 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_payroll_ministry,access_payroll_ministry,model_payroll_ministry,base.group_user,1,1,1,1
+access_payroll_afp,access_payroll_afp,model_payroll_afp,base.group_user,1,1,1,1
+access_payroll_rciva,access_payroll_rciva,model_payroll_rciva,base.group_user,1,1,1,1
+access_hr_rciva,access_hr_rciva,model_hr_rciva,base.group_user,1,1,1,1
+access_hr_bono_antiguedad,access_hr_bono_antiguedad,model_hr_bono_antiguedad,base.group_user,1,1,1,1
+access_hr_bono_plantilla,access_hr_bono_plantilla,model_hr_bono_plantilla,base.group_user,1,1,1,1
+access_hr_bono_contract,access_hr_bono_contract,model_hr_bono_contract,base.group_user,1,1,1,1
+access_hr_adelantos,access_hr_adelantos,model_hr_adelantos,base.group_user,1,1,1,1
+access_hr_adelantos_config,access_hr_adelantos_config,model_hr_adelantos_config,base.group_user,1,1,1,1
+access_hr_prestamos_config,access_hr_prestamos_config,model_hr_prestamos_config,base.group_user,1,1,1,1
+access_hr_prestamos,access_hr_prestamos,model_hr_prestamos,base.group_user,1,1,1,1
+access_hr_prestamos_line,access_hr_prestamos_line,model_hr_prestamos_line,base.group_user,1,1,1,1
+access_hr_finiquito_other,access_hr_finiquito_other,model_hr_finiquito_other,base.group_user,1,1,1,1
+access_hr_finiquito_benefit,access_hr_finiquito_benefit,model_hr_finiquito_benefit,base.group_user,1,1,1,1
+access_hr_finiquito_deductions,access_hr_finiquito_deductions,model_hr_finiquito_deductions,base.group_user,1,1,1,1
+access_hr_finiquito,access_hr_finiquito,model_hr_finiquito,base.group_user,1,1,1,1

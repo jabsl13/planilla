@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Employee Form -->
+        <record model="ir.ui.view" id="hr_employee_views_form_inherit_hr">
+            <field name="name">hr.employee.views.form.inherit.hr</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='mobile_phone']" position="before">
+                    <field name="all_name"/>
+                    <field name="all_name_two"/>
+                    <field name="paternal_surname"/>
+                    <field name="maternal_surname"/>
+                    <field name="maried_surname"/>
+                </xpath>
+                <xpath expr="//field[@name='identification_id']" position="after">
+                    <field name="expedido"/>
+                </xpath>
+                <xpath expr="//field[@name='emergency_phone']" position="after">
+                    <field name="blood_type"/>
+                </xpath>
+                <xpath expr="//field[@name='registration_number']" position="after">
+                    <field name="cod_laboral"/>
+                    <field name="date_entry"/>
+                    <field name="date_finiquito"/>
+                    <field name="antiquity"/>
+                    <field name="antiquity_days"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

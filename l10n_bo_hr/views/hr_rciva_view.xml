@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_hr_rciva_tree" model="ir.ui.view">
+        <field name="name">hr.rciva.tree</field>
+        <field name="model">hr.rciva</field>
+        <field name="arch" type="xml">
+            <tree string="Registro RCIVA" editable="bottom">
+                <field name="company_id" invisible="1"/>
+                <field name="employee_id"/>
+                <field name="month"/>
+                <field name="year"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="amount_total"/>
+                <field name="amount_iva"/>
+                <field name="amount_saldo"/>
+                <field name="ufv_inicial_val"/>
+                <field name="ufv_final_val"/>
+                <field name="payslip_id" readonly="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="act_hr_rciva">
+        <field name="name">Registro RCV IVA</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hr.rciva</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+    <menuitem
+            id="menu_hr_rciva"
+            action="act_hr_rciva"
+            parent="hr_payroll.menu_hr_payroll_payslips"
+            sequence="100"/>
+</odoo>

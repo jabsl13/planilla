@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_attendance_overtime_bo_tree" model="ir.ui.view">
+        <field name="name">hr.attendance.overtime.bo.tree</field>
+        <field name="model">hr.attendance.overtime</field>
+        <field name="inherit_id" ref="hr_attendance.view_attendance_overtime_tree"/>
+        <field name="arch" type="xml">
+            <field name="date" position="after">
+                <field name="dia_semana"/>
+                <field name="horas_nocturno"/>
+            </field>
+        </field>
+    </record>
+</odoo>
